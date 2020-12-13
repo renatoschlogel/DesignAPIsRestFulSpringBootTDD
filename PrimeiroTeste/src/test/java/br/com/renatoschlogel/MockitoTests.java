@@ -20,11 +20,9 @@ public class MockitoTests {
 		
 		Mockito.when(lista.size()).thenReturn(10);
 		
-		lista.size();
-		lista.size();
 		// Assertions.assertThat(lista.size()).isEqualTo(10);
 		
-		Mockito.verify(lista, Mockito.times(2)).size();
+		Mockito.verify(lista, Mockito.never()).size();
 		
 	}
 }
