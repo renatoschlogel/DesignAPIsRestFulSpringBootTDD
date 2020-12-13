@@ -1,14 +1,14 @@
 package br.com.renatoschlogel;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CadastroDePessoasTest {
 	
 	private CadastroDePessoas cadastroDePessoas;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		cadastroDePessoas = new CadastroDePessoas();
 	}
@@ -30,11 +30,11 @@ public class CadastroDePessoasTest {
 		                                                     .contains(pessoa);
 	}
 	
-	@Test(expected = PessoaSemNomeException.class)
+	@Test()
 	public void naoDeveAdicionarPessoaComNomeVazio() throws Exception {
 		Pessoa pessoa = new Pessoa();
-		cadastroDePessoas.adicionar(pessoa);
 		
+		org.junit.jupiter.api.Assertions.assertThrows(PessoaSemNomeException.class, () -> cadastroDePessoas.adicionar(pessoa) );
 	}
 	
 	@Test
@@ -48,9 +48,9 @@ public class CadastroDePessoasTest {
 		
 	}
 	
-	@Test(expected = PessoaInexistente.class)
+	@Test()
 	public void deveLancarUmaExcecaoAoTentarRemoverUmaPessoaInexistente() {
 		Pessoa pessoa = new Pessoa();
-		cadastroDePessoas.remover(pessoa);
+		org.junit.jupiter.api.Assertions.assertThrows(PessoaInexistente.class, () -> cadastroDePessoas.remover(pessoa) );
 	}
 }

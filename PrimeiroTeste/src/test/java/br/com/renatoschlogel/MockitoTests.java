@@ -2,25 +2,24 @@ package br.com.renatoschlogel;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MockitoTests {
 
 	@Mock
 	List<String> lista;
 	
 	@Test
-	public void primeiroTesteMockito() throws Exception {
+	public void primeiroTesteMockito() {
 		
-		lista.add("");
 		lista.size();
+		lista.add("");
 		
 		InOrder inOrder = Mockito.inOrder(lista);
 		

@@ -1,14 +1,14 @@
 package br.com.renatoschlogel;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PrimeiroTest {
 	
 	private Calculadora calculadora;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		calculadora = new Calculadora();
 	}
@@ -31,9 +31,9 @@ public class PrimeiroTest {
 		Assertions.assertThat(resultado).isEqualTo(5);
 	}
     
-    @Test(expected = RuntimeException.class )
+    @Test
 	public void deveLancarUmaExcecaoAoTentarDividirPorZero() {
-		calculadora.dividir(10, 0);
+    	org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> calculadora.dividir(10, 0) );
 	}
     
     @Test
