@@ -5,6 +5,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -18,11 +19,12 @@ public class MockitoTests {
 	@Test
 	public void primeiroTesteMockito() throws Exception {
 		
-		Mockito.when(lista.size()).thenReturn(10);
+		lista.add("");
+		lista.size();
 		
-		// Assertions.assertThat(lista.size()).isEqualTo(10);
+		InOrder inOrder = Mockito.inOrder(lista);
 		
-		Mockito.verify(lista, Mockito.never()).size();
-		
+		inOrder.verify(lista).size();
+		inOrder.verify(lista).add("");
 	}
 }
