@@ -6,9 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -19,6 +22,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
+import br.com.renatoschlogel.libraryapi.api.entities.Book;
+import br.com.renatoschlogel.libraryapi.api.service.BookService;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -31,6 +36,9 @@ public class BookControllerTest {
 	@Autowired
 	MockMvc mvc;
 	
+	@MockBean
+	BookService bookService; 
+	
 	@Test
 	@DisplayName("Deve criar um livro com sucesso!")
 	public void createBookTest() throws Exception {
@@ -39,6 +47,13 @@ public class BookControllerTest {
 		                 				   .author("Ken")
 		                 				   .isbn("123")
 		                 				   .build();
+		
+		Book savedBook = Book.builder().title("GO TEAM!")
+				   					   .id(1L)
+				   					   .author("Ken")
+				   					   .isbn("123")
+				   					   .build();
+		BDDMockito.given(bookService.incluir(Mockito.any(Book.class))).willReturn(savedBook);
 		
 		String json = new ObjectMapper().writeValueAsString(bookDTO);
 		
