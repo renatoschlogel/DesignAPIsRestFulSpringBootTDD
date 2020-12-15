@@ -1,6 +1,5 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,10 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -36,23 +35,27 @@ public class BookControllerTest {
 	@DisplayName("Deve criar um livro com sucesso!")
 	public void createBookTest() throws Exception {
 		
-		String json = new ObjectMapper().writeValueAsString(null);
+		BookDTO bookDTO = BookDTO.builder().title("GO TEAM!")
+		                 				   .author("Ken")
+		                 				   .isbn("123")
+		                 				   .build();
+		
+		String json = new ObjectMapper().writeValueAsString(bookDTO);
 		
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
 			.post(BOOK_API)
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
-			.content("");
+			.content(json);
 		
 		mvc.perform(request)
 		   .andExpect(status().isCreated())
 		   .andExpect(jsonPath("id").isNotEmpty())
-		   .andExpect(jsonPath("title").value("GO TEAM!"))
-		   .andExpect(jsonPath("author").value("Autor"))
-		   .andExpect(jsonPath("isbn").value("123"))
+		   .andExpect(jsonPath("title").value(bookDTO.getTitle()))
+		   .andExpect(jsonPath("author").value(bookDTO.getAuthor()))
+		   .andExpect(jsonPath("isbn").value(bookDTO.getIsbn()))
 		   ;
 				  
-				  ;
 	}
 	
 	@Test
