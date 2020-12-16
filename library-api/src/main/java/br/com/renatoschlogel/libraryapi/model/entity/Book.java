@@ -1,4 +1,4 @@
-package br.com.renatoschlogel.libraryapi.api.entities;
+package br.com.renatoschlogel.libraryapi.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

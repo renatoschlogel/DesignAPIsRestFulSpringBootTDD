@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
-import br.com.renatoschlogel.libraryapi.api.entities.Book;
-import br.com.renatoschlogel.libraryapi.api.service.BookService;
+import br.com.renatoschlogel.libraryapi.model.entity.Book;
+import br.com.renatoschlogel.libraryapi.service.BookService;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")

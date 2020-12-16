@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
-import br.com.renatoschlogel.libraryapi.api.entities.Book;
-import br.com.renatoschlogel.libraryapi.api.service.BookService;
+import br.com.renatoschlogel.libraryapi.model.entity.Book;
+import br.com.renatoschlogel.libraryapi.service.BookService;
 
 @RestController
 @RequestMapping("/api/books")
