@@ -1,7 +1,6 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -105,6 +104,7 @@ public class BookControllerTest {
 		                    .andExpect(jsonPath("errors", hasSize(1)))
 		                    .andExpect(jsonPath("errors[0]").value(mensagemException) );
 	}
+	
 	
 	private BookDTO createNewBookDTO() {
 		BookDTO bookDTO = BookDTO.builder().title("GO TEAM!")
