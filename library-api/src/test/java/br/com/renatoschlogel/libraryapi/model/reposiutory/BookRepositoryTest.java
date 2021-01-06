@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
-import br.com.renatoschlogel.libraryapi.model.entity.Book.BookBuilder;
 import br.com.renatoschlogel.libraryapi.model.repository.BookRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -42,8 +41,8 @@ public class BookRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("Deve retornar falso quando nap existir um livro na base com o isbn informado")
-	void returnFalseWhenIsbnDoesnottExists() throws Exception {
+	@DisplayName("Deve retornar falso quando não existir um livro na base com o isbn informado")
+	void returnFalseWhenIsbnDoesNottExists() throws Exception {
 		
 		String isbn = "123";
 		
