@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,6 +107,30 @@ public class BookControllerTest {
 		                    .andExpect(jsonPath("errors[0]").value(mensagemException) );
 	}
 	
+	
+	@Test
+	@DisplayName("Deve obter informações de um livro.")
+	void getBookDetailsTest() throws Exception {
+		
+		Long id = 1l;
+		
+		Book book = Book.builder()
+				        .id(id)
+						.title("GO TEAM!")
+						.author("Ken")
+						.isbn("123").build();
+		
+		BDDMockito.given(bookService.getById(id)).willReturn(Optional.of(book));
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API + "/" + id)
+                              										  .accept(MediaType.APPLICATION_JSON);
+		mvc.perform(request)
+		   .andExpect(status().isOk())
+		   .andExpect(jsonPath("id").value(id))
+		   .andExpect(jsonPath("title").value(book.getTitle()))
+		   .andExpect(jsonPath("author").value(book.getAuthor()))
+		   .andExpect(jsonPath("isbn").value(book.getIsbn()));
+	}
 	
 	private BookDTO createNewBookDTO() {
 		BookDTO bookDTO = BookDTO.builder().title("GO TEAM!")

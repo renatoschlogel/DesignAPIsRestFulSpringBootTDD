@@ -1,5 +1,7 @@
 package br.com.renatoschlogel.libraryapi.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
@@ -24,6 +26,11 @@ public class BookServiceImpl implements BookService {
 		}
 		
 		return bookRepository.save(book);
+	}
+
+	@Override
+	public Optional<Book> getById(Long id) {
+		return Optional.empty();
 	}
 
 }
