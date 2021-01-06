@@ -1,6 +1,7 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -130,6 +131,19 @@ public class BookControllerTest {
 		   .andExpect(jsonPath("title").value(book.getTitle()))
 		   .andExpect(jsonPath("author").value(book.getAuthor()))
 		   .andExpect(jsonPath("isbn").value(book.getIsbn()));
+	}
+	
+	@Test
+	@DisplayName("Deve retornar resourse not found quando o livro nao for encontrado")
+	void bookNotFoundTest() throws Exception {
+		
+		BDDMockito.given(bookService.getById(Mockito.anyLong())).willReturn(Optional.empty());
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API + "/" + 1l)
+                              										  .accept(MediaType.APPLICATION_JSON);
+		mvc.perform(request)
+		   .andExpect(status().isNotFound());
+		
 	}
 	
 	private BookDTO createNewBookDTO() {
