@@ -176,6 +176,57 @@ public class BookControllerTest {
 		
 	}
 	
+	@Test
+	@DisplayName("Deve atualizar um livro")
+	void updateBookTest() throws Exception {
+		
+		BookDTO bookDTO = createNewBookDTO();
+		bookDTO.setId(1L);
+		
+		Book book = Book.builder().id(bookDTO.getId()).build();
+		book.setTitle("Titulo Atualizado");
+		book.setAuthor("Autor atualizado");
+		book.setIsbn(bookDTO.getIsbn());
+		
+		bookDTO.setTitle("Titulo Atualizado");
+		bookDTO.setIsbn("ISBN Atualizado");
+		bookDTO.setAuthor("Autor atualizado");
+		
+		
+		BDDMockito.given(bookService.getById(bookDTO.getId())).willReturn(Optional.of(book));
+		BDDMockito.given(bookService.update(book)).willReturn(book);
+		String json = new ObjectMapper().writeValueAsString(bookDTO);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(BOOK_API + "/" + bookDTO.getId())
+																	  .content(json)
+																	  .accept(MediaType.APPLICATION_JSON)
+																	  .contentType(MediaType.APPLICATION_JSON);
+		mvc.perform(request)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("id").value(book.getId()))
+			.andExpect(jsonPath("title").value(bookDTO.getTitle()))
+			.andExpect(jsonPath("author").value(bookDTO.getAuthor()))
+			.andExpect(jsonPath("isbn").value(book.getIsbn()));
+	
+	}
+	
+	@Test
+	@DisplayName("Deve retornar resource not found quando não encontrar o livro para atualizar")
+	void updateInexistentBookTest() throws Exception {
+		BookDTO bookDTO = createNewBookDTO();
+		bookDTO.setId(1L);
+		
+		BDDMockito.given(bookService.getById(bookDTO.getId())).willReturn(Optional.empty());
+		String json = new ObjectMapper().writeValueAsString(bookDTO);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(BOOK_API + "/" + bookDTO.getId())
+																	  .content(json)
+																	  .accept(MediaType.APPLICATION_JSON)
+																	  .contentType(MediaType.APPLICATION_JSON);
+		mvc.perform(request)
+			.andExpect(status().isNotFound());
+	}
+	
 	private BookDTO createNewBookDTO() {
 		BookDTO bookDTO = BookDTO.builder().title("GO TEAM!")
 		                 				   .author("Ken")
