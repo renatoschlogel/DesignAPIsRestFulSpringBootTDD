@@ -98,8 +98,7 @@ public class BookServiceTest {
 	
 		assertThat(optBook.isPresent()).isFalse();
 	}
-	
-	
+
 	private Book createValidBook() {
 		return Book.builder().title("Titulo").author("Autor").isbn("123").build();
 	}

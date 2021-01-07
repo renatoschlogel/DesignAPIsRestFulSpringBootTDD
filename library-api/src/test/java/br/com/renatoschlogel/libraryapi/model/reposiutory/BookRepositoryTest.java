@@ -2,6 +2,8 @@ package br.com.renatoschlogel.libraryapi.model.reposiutory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,13 +33,18 @@ public class BookRepositoryTest {
 		
 		String isbn = "123";
 		
-		Book book = Book.builder().title("Clean Code").author("Uncle Bob").isbn(isbn).build();
+		Book book = createNewBook(isbn);
 		
 		entityManager.persist(book);
 		
 		boolean existsByIsbn = bookRepository.existsByIsbn(isbn);
 		
 		assertThat(existsByIsbn).isTrue();
+	}
+
+	private Book createNewBook(String isbn) {
+		Book book = Book.builder().title("Clean Code").author("Uncle Bob").isbn(isbn).build();
+		return book;
 	}
 	
 	@Test
@@ -49,5 +56,18 @@ public class BookRepositoryTest {
 		boolean existsByIsbn = bookRepository.existsByIsbn(isbn);
 		
 		assertThat(existsByIsbn).isFalse();
+	}
+	
+	@Test
+	@DisplayName("Deve obter um livro por id")
+	void findBookByIdTest() throws Exception {
+		
+		Book book = createNewBook("111");
+		entityManager.persist(book);
+		
+		Optional<Book> optBook = bookRepository.findById(book.getId());
+
+		assertThat(optBook.isPresent()).isTrue();
+		assertThat(optBook.get().getId()).isEqualTo(book.getId());
 	}
 }
