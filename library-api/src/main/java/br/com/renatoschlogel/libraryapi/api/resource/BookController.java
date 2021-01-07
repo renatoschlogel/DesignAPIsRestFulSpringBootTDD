@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,17 @@ public class BookController {
 		return  bookService.getById(id)
 				            .map(book -> modelMapper.map(book, BookDTO.class))
 				            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}
+	
+	@DeleteMapping("{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long id) {
+		Optional<Book> optBook = bookService.getById(id);
+		if(!optBook.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		
+		bookService.delete(optBook.get());
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
