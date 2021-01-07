@@ -114,6 +114,7 @@ public class BookServiceTest {
 		
 		assertThat(book.getId()).isEqualTo(id);
 		assertThat(book.getTitle()).isEqualTo(title);
+		
 	}
 	
 	@Test
@@ -121,6 +122,8 @@ public class BookServiceTest {
 	void updateNotPersitBookTest() throws Exception {
 		Book bookNullId = createValidBook();
 		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->bookService.update(bookNullId) );
+		
+		Mockito.verify(bookRepository, Mockito.never()).save(bookNullId);
 	}
 	
 	@Test
