@@ -129,17 +129,20 @@ public class BookServiceTest {
 		Book book = createValidBook();
 		long id = 1L;
 		book.setId(id);	
-				
-		bookService.delete(book);
+			
+		org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> bookService.delete(book));
+		
+		Mockito.verify(bookRepository, Mockito.times(1)).delete(book);
 	}
 	
 	@Test
 	@DisplayName("Deve lancar uma exceção ao tentar deletar pois o livro não esta persistido")
 	void deleteNotPersitBookTest() throws Exception {
-		Book bookNullId = createValidBook();
-		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->bookService.delete(bookNullId) );
+		Book bookNullId = new Book();
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.delete(bookNullId) );
+		
+		Mockito.verify(bookRepository, Mockito.never()).delete(bookNullId);
 	}
-	
 
 	private Book createValidBook() {
 		return Book.builder().title("Titulo").author("Autor").isbn("123").build();
