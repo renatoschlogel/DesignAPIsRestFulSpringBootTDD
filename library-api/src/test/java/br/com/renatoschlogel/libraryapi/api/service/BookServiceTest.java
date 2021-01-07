@@ -98,6 +98,48 @@ public class BookServiceTest {
 	
 		assertThat(optBook.isPresent()).isFalse();
 	}
+	
+	@Test
+	@DisplayName("Deve atualizar um livro")
+	void updateBookTest() throws Exception {
+		Book book = createValidBook();
+		long id = 1L;
+		String title = "Titulo Atualizado";
+		book.setId(id);	
+		book.setTitle(title);
+		
+		Mockito.when(bookRepository.save(book)).thenReturn(book);
+		
+		book = bookService.update(book);
+		
+		assertThat(book.getId()).isEqualTo(id);
+		assertThat(book.getTitle()).isEqualTo(title);
+	}
+	
+	@Test
+	@DisplayName("Deve lancar uma exceção ao tentar atualizar pois o livro não esta persistido")
+	void updateNotPersitBookTest() throws Exception {
+		Book bookNullId = createValidBook();
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->bookService.update(bookNullId) );
+	}
+	
+	@Test
+	@DisplayName("Deve deletar um  livro")
+	void deleteBookTest() throws Exception {
+		Book book = createValidBook();
+		long id = 1L;
+		book.setId(id);	
+				
+		bookService.delete(book);
+	}
+	
+	@Test
+	@DisplayName("Deve lancar uma exceção ao tentar deletar pois o livro não esta persistido")
+	void deleteNotPersitBookTest() throws Exception {
+		Book bookNullId = createValidBook();
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->bookService.delete(bookNullId) );
+	}
+	
 
 	private Book createValidBook() {
 		return Book.builder().title("Titulo").author("Autor").isbn("123").build();
