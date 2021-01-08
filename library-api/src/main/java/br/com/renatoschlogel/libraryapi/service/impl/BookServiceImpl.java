@@ -2,6 +2,8 @@ package br.com.renatoschlogel.libraryapi.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
@@ -48,6 +50,12 @@ public class BookServiceImpl implements BookService {
 		}
 		
 		return bookRepository.save(book);
+	}
+
+	@Override
+	public Page<Book> find(Book book, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
