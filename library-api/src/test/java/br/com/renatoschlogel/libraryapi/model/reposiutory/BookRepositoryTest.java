@@ -70,4 +70,28 @@ public class BookRepositoryTest {
 		assertThat(optBook.isPresent()).isTrue();
 		assertThat(optBook.get().getId()).isEqualTo(book.getId());
 	}
+	
+	@Test
+	@DisplayName("Deve salvar um livro")
+	void saveBookTest() throws Exception {
+		Book book = createNewBook("123");
+		Book savedBook = bookRepository.save(book);
+		
+		assertThat(savedBook.getId()).isNotNull();
+	}
+	
+	@Test
+	@DisplayName("Deve deletar um livro")
+	void deleteBookTest() throws Exception {
+		
+		Book book = createNewBook("123");
+		entityManager.persist(book);
+		book = entityManager.find(Book.class, book.getId());
+	
+		bookRepository.delete(book);
+		
+		book = entityManager.find(Book.class, book.getId());
+		
+		assertThat(book).isNull();
+	}
 }
