@@ -255,7 +255,7 @@ public class BookControllerTest {
 		   .andExpect(jsonPath("content", Matchers.hasSize(1)))
 		   .andExpect(jsonPath("totalElements").value(1))
 		   .andExpect(jsonPath("pageable.pageSize").value(100))
-		   .andExpect(jsonPath("pageable.number").value(0));
+		   .andExpect(jsonPath("pageable.pageNumber").value(0));
 	}
 	
 	
