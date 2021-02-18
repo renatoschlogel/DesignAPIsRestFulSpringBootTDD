@@ -244,8 +244,11 @@ public class BookControllerTest {
 						.title(bookDTO.getTitle())
 						.isbn(bookDTO.getIsbn())
 						.build();
+		
 		BDDMockito.given(bookService.find(Mockito.any(Book.class), Mockito.any(Pageable.class)) )
 				  .willReturn(new PageImpl<Book>(Arrays.asList(book), PageRequest.of(0, 100), 1));
+		
+		
 		String queryString = String.format("?title=%s&author=%s&page=0&size=100", book.getTitle(), book.getAuthor());
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API + queryString)
 		                      										  .accept(MediaType.APPLICATION_JSON);
