@@ -1,7 +1,9 @@
 package br.com.renatoschlogel.libraryapi.api.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -153,6 +155,7 @@ public class BookServiceTest {
 		Mockito.verify(bookRepository, Mockito.never()).delete(bookNullId);
 	}
 
+
 	
 	@Test
 	@DisplayName("Deve filtrar livros pelas propriedades ")
@@ -176,6 +179,14 @@ public class BookServiceTest {
 	
 	private Book createValidBook() {
 		return Book.builder().title("Titulo").author("Autor").isbn("123").build();
+	}
+	
+	
+	@Test
+	void testName() throws Exception {
+		
+		assertEquals(new BigDecimal(1.00), new BigDecimal(1.0000));
+		
 	}
 	
 	
