@@ -2,16 +2,12 @@ package br.com.renatoschlogel.libraryapi.service.impl;
 
 import java.util.Optional;
 
-import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
-import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.repository.BookRepository;
