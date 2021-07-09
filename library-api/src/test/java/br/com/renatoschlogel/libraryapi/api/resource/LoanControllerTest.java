@@ -87,8 +87,8 @@ public class LoanControllerTest {
 			.contentType(MediaType.APPLICATION_JSON).content(json);
 
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
-						    .andExpect(jsonPath("erros", hasSize(1)))
-						    .andExpect(jsonPath("erros[0]").value("Book not found fot passad isbn."))
+						    .andExpect(jsonPath("errors", hasSize(1)))
+						    .andExpect(jsonPath("errors[0]").value("Book not found fot passad isbn."))
 						    ;
 	}
 	

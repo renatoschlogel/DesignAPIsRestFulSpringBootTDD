@@ -11,10 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
-import br.com.renatoschlogel.libraryapi.api.exception.ApiErros;
-import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.service.BookService;
 
@@ -94,19 +89,5 @@ public class BookController {
 		
 		return new PageImpl<BookDTO>(listBookDTO, pageRequest, result.getTotalElements());
 	}
-	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErros handleValidationException(MethodArgumentNotValidException exception){
-		BindingResult bindingResult = exception.getBindingResult();
-		return new ApiErros(bindingResult);
-	}
-	
-	@ExceptionHandler(BusinessException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErros handleBusinessException(BusinessException exception){
-		return new ApiErros(exception);
-	}
-	
 	
 }
