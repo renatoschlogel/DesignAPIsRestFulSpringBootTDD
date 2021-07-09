@@ -1,5 +1,8 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -67,6 +70,26 @@ public class LoanControllerTest {
 		mvc.perform(request)
 			.andExpect( MockMvcResultMatchers.status().isCreated())
 			.andExpect(MockMvcResultMatchers.content().string("1"));
+	}
+	
+	@Test
+	@DisplayName("Deve retornar um erro ao tentar emprestar um livro inexistente.")
+	void invalidIsbnCreateLoan() throws Exception {
+
+		String isbn = "123";
+		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).custumer("Renato").build();
+		String json = new ObjectMapper().writeValueAsString(loanDto);
+		
+		BDDMockito.given(bookService.getBookByIsbn(isbn)).willReturn(Optional.empty());
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(LOAN_API)
+			.accept(MediaType.APPLICATION_JSON)
+			.contentType(MediaType.APPLICATION_JSON).content(json);
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
+						    .andExpect(jsonPath("erros", hasSize(1)))
+						    .andExpect(jsonPath("erros[0]").value("Book not found fot passad isbn."))
+						    ;
 	}
 	
 }
