@@ -1,13 +1,16 @@
 package br.com.renatoschlogel.libraryapi.api.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -166,7 +169,7 @@ public class BookServiceTest {
 		List<Book> list = Arrays.asList(book);
 		Page<Book> page = new PageImpl<Book>(list, pageRequest , 1);
 		
-		Mockito.when(bookRepository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+		when(bookRepository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
 			   .thenReturn(page);
 		
 		Page<Book> booksPage = bookService.find(book, pageRequest);
@@ -177,18 +180,24 @@ public class BookServiceTest {
 		assertThat(booksPage.getPageable().getPageSize()).isEqualTo(10);
 	}
 	
+	@Test
+	@DisplayName("Deve obter o livro pelo isbn")
+	void shoudBeBookByIsbn() throws Exception {
+		String isbn = "1234";
+		Book book = Book.builder().id(1l).isbn(isbn).build();
+		when(bookRepository.findByIsbn(isbn)).thenReturn(Optional.of(book));
+		
+		Optional<Book> optBook = bookService.getBookByIsbn(isbn);
+		
+		assertThat(optBook.isPresent()).isTrue();
+		assertThat(optBook.get().getId()).isEqualTo(1l);
+		assertThat(optBook.get().getIsbn()).isEqualTo(isbn);
+		
+		verify(bookRepository, Mockito.times(1)).findByIsbn(isbn);
+	}
+	
 	private Book createValidBook() {
 		return Book.builder().title("Titulo").author("Autor").isbn("123").build();
 	}
-	
-	
-	@Test
-	void testName() throws Exception {
-		
-		assertEquals(new BigDecimal(1.00), new BigDecimal(1.0000));
-		
-	}
-	
-	
 	
 }
