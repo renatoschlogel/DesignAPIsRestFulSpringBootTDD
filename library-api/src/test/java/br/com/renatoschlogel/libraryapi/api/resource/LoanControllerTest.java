@@ -1,6 +1,7 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.renatoschlogel.libraryapi.api.dto.LoanDTO;
+import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
 import br.com.renatoschlogel.libraryapi.service.BookService;
@@ -91,5 +93,30 @@ public class LoanControllerTest {
 						    .andExpect(jsonPath("errors[0]").value("Book not found fot passad isbn."))
 						    ;
 	}
+	
+	@Test
+	@DisplayName("Deve retornar um erro ao tentar emprestar um livro já emprestado")
+	void loanedBookErrorOnCreateLoan() throws Exception {
+
+		String isbn = "123";
+		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).custumer("Renato").build();
+		String json = new ObjectMapper().writeValueAsString(loanDto);
+		
+		Book book = Book.builder().id(1L).isbn("123").build();
+		given(bookService.getBookByIsbn("123")).willReturn(Optional.of(book));
+		
+		given(loanService.save(Mockito.any(Loan.class))).willThrow(new BusinessException("Book already loaned."));
+		
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(LOAN_API)
+			.accept(MediaType.APPLICATION_JSON)
+			.contentType(MediaType.APPLICATION_JSON).content(json);
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
+						    .andExpect(jsonPath("errors", hasSize(1)))
+						    .andExpect(jsonPath("errors[0]").value("Book already loaned."))
+						    ;
+	}
+	
 	
 }
