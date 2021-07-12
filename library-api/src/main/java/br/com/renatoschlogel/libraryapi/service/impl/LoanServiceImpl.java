@@ -35,9 +35,7 @@ public class LoanServiceImpl implements LoanService{
 
 	@Override
 	public Optional<Loan> findById(Long id) {
-		
-		
-		return null;
+		return loanRepository.findById(id);
 	}
 
 }

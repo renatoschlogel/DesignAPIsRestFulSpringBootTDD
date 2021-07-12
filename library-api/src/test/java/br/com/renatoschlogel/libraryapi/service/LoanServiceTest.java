@@ -2,16 +2,20 @@ package br.com.renatoschlogel.libraryapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -78,6 +82,27 @@ public class LoanServiceTest {
 							 .hasMessage("Book already loaned.");
 		
 		verify(loanRepository, never()).save(loan);
+	}
+	
+	@Test
+	@DisplayName("Deve encontrar o empréstimo pelo id")
+	void getLoanById() throws Exception {
+		
+		Loan loan = Loan.builder().id(1l)
+								  .book(Book.builder().build())
+								  .custumer("Renato")
+								  .loanDate(LocalDate.now())
+								  .build();
+		
+		when(loanRepository.findById(loan.getId())).thenReturn(Optional.of(loan));
+		
+		Optional<Loan> optLoan = loanService.findById(loan.getId());
+
+		assertThat(optLoan.isPresent()).isTrue();
+		assertThat(optLoan.get()).isEqualTo(loan);
+		
+		Mockito.verify(loanRepository, times(1)).findById(loan.getId());
+		
 	}
 	
 }
