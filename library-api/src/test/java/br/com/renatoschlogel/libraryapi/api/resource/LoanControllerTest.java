@@ -2,7 +2,11 @@ package br.com.renatoschlogel.libraryapi.api.resource;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -27,6 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.renatoschlogel.libraryapi.api.dto.LoanDTO;
+import br.com.renatoschlogel.libraryapi.api.dto.ReturnedLoanDTO;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
@@ -82,9 +87,9 @@ public class LoanControllerTest {
 		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).custumer("Renato").build();
 		String json = new ObjectMapper().writeValueAsString(loanDto);
 		
-		BDDMockito.given(bookService.getBookByIsbn(isbn)).willReturn(Optional.empty());
+		given(bookService.getBookByIsbn(isbn)).willReturn(Optional.empty());
 		
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(LOAN_API)
+		MockHttpServletRequestBuilder request = post(LOAN_API)
 			.accept(MediaType.APPLICATION_JSON)
 			.contentType(MediaType.APPLICATION_JSON).content(json);
 
@@ -108,15 +113,30 @@ public class LoanControllerTest {
 		given(loanService.save(Mockito.any(Loan.class))).willThrow(new BusinessException("Book already loaned."));
 		
 		
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(LOAN_API)
+		MockHttpServletRequestBuilder request = post(LOAN_API)
 			.accept(MediaType.APPLICATION_JSON)
 			.contentType(MediaType.APPLICATION_JSON).content(json);
 
-		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
+		mvc.perform(request).andExpect(status().isBadRequest())
 						    .andExpect(jsonPath("errors", hasSize(1)))
 						    .andExpect(jsonPath("errors[0]").value("Book already loaned."))
 						    ;
 	}
-	
+
+	@Test
+	@DisplayName("Deve devolver o livro emprestado")
+	void returnBook() throws Exception {
+		
+		ReturnedLoanDTO retornedLoanDTO = ReturnedLoanDTO.builder().retorned(true).build();
+		
+		String jsonRetornedLoan = new ObjectMapper().writeValueAsString(retornedLoanDTO);
+		
+		
+		MockHttpServletRequestBuilder request = patch(LOAN_API.concat("/1")).accept(MediaType.APPLICATION_JSON)
+																	  		.contentType(MediaType.APPLICATION_JSON)
+																	  		.content(jsonRetornedLoan);
+		mvc.perform(request).andExpect(status().isOk());
+		BDDMockito.verify(loanService, times(1)).updateReturnedBook(1l, retornedLoanDTO.getRetorned());
+	}
 	
 }

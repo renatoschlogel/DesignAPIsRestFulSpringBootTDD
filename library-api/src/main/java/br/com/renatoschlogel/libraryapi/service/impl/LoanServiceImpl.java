@@ -26,4 +26,9 @@ public class LoanServiceImpl implements LoanService{
 		return loanRepository.save(loan);
 	}
 
+	@Override
+	public void updateReturnedBook(Long idLoan, Boolean retorned) {
+		
+	}
+
 }
