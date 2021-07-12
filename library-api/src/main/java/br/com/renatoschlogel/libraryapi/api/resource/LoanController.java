@@ -47,7 +47,8 @@ public class LoanController{
 	
 	@PatchMapping("{id}")
 	public void returnedBook(@PathVariable Long id, @RequestBody ReturnedLoanDTO returnedLoanDTO) {
-		loanService.updateReturnedBook(id, returnedLoanDTO.getRetorned());
+		Loan loan = loanService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		loanService.updateReturnedBook(loan.getId(), returnedLoanDTO.getRetorned());
 	}
 
 }
