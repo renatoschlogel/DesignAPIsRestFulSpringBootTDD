@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
+import br.com.renatoschlogel.libraryapi.model.entity.Loan.LoanBuilder;
 import br.com.renatoschlogel.libraryapi.model.repository.LoanRepository;
 import br.com.renatoschlogel.libraryapi.service.impl.LoanServiceImpl;
 
@@ -87,11 +89,7 @@ public class LoanServiceTest {
 	@DisplayName("Deve encontrar o empréstimo pelo id")
 	void getLoanById() throws Exception {
 		
-		Loan loan = Loan.builder().id(1l)
-								  .book(Book.builder().build())
-								  .custumer("Renato")
-								  .loanDate(LocalDate.now())
-								  .build();
+		Loan loan = loanBuilder().build();
 		
 		when(loanRepository.findById(loan.getId())).thenReturn(Optional.of(loan));
 		
@@ -102,6 +100,32 @@ public class LoanServiceTest {
 		
 		Mockito.verify(loanRepository, times(1)).findById(loan.getId());
 		
+	}
+	
+	@Test
+	@DisplayName("Deve atualizaro o status do emprestimo")
+	void updateReturnedBook() throws Exception {
+
+		Loan loan = loanBuilder().build();
+		loan.setReturned(false);
+		
+		when(loanRepository.findById(loan.getId())).thenReturn(Optional.of(loan));
+		when(loanRepository.save(Mockito.any(Loan.class))).then(AdditionalAnswers.returnsFirstArg());		
+		
+		Loan retornedLoan = loanService.updateReturnedBook(loan.getId(), true);
+		
+		assertThat(retornedLoan).isNotNull();
+		assertThat(retornedLoan.getId()).isEqualTo(loan.getId());
+		assertThat(retornedLoan.getReturned()).isTrue();
+		
+		verify(loanRepository, times(1)).save(loan);
+	}
+	
+	private LoanBuilder loanBuilder() {
+		return Loan.builder().id(1l)
+								  .book(Book.builder().build())
+								  .custumer("Renato")
+								  .loanDate(LocalDate.now());
 	}
 	
 }

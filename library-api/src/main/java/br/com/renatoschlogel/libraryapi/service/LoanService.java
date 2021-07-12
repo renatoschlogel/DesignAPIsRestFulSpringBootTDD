@@ -8,7 +8,7 @@ public interface LoanService {
 
 	public Loan save(Loan loan);
 
-	public void updateReturnedBook(Long idLoan, Boolean retorned);
+	public Loan updateReturnedBook(Long idLoan, Boolean retorned);
 
 	public Optional<Loan> findById(Long id);
 

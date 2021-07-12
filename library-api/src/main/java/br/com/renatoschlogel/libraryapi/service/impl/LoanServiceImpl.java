@@ -29,8 +29,10 @@ public class LoanServiceImpl implements LoanService{
 	}
 
 	@Override
-	public void updateReturnedBook(Long idLoan, Boolean retorned) {
-		
+	public Loan updateReturnedBook(Long idLoan, Boolean retorned) {
+		Loan loan = loanRepository.findById(idLoan).orElseThrow(() -> new BusinessException("Empréstimo não encontrado!") );
+		loan.setReturned(retorned);
+		return loanRepository.save(loan);
 	}
 
 	@Override
