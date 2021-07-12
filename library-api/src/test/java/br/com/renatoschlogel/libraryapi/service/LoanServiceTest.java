@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -119,6 +120,14 @@ public class LoanServiceTest {
 		assertThat(retornedLoan.getReturned()).isTrue();
 		
 		verify(loanRepository, times(1)).save(loan);
+	}
+	
+	@Test
+	void updateReturnedBookNotFound() throws Exception {
+		Throwable exception = Assertions.catchThrowable(() -> loanService.updateReturnedBook(899l, true));
+		assertThat(exception).isInstanceOf(BusinessException.class)
+							 .hasMessage("Empréstimo não encontrado!");
+		
 	}
 	
 	private LoanBuilder loanBuilder() {
