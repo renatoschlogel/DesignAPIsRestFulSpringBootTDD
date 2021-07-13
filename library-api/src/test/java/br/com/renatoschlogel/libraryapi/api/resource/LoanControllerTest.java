@@ -1,6 +1,7 @@
 package br.com.renatoschlogel.libraryapi.api.resource;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -9,8 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -31,10 +37,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.renatoschlogel.libraryapi.api.dto.LoanDTO;
+import br.com.renatoschlogel.libraryapi.api.dto.LoanFilterDTO;
 import br.com.renatoschlogel.libraryapi.api.dto.ReturnedLoanDTO;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
+import br.com.renatoschlogel.libraryapi.model.entity.Loan.LoanBuilder;
 import br.com.renatoschlogel.libraryapi.service.BookService;
 import br.com.renatoschlogel.libraryapi.service.LoanService;
 
@@ -151,5 +159,34 @@ public class LoanControllerTest {
 																	  		.content(jsonRetornedLoan);
 		mvc.perform(request).andExpect(status().isNotFound());
 	}
+	
+	@Test
+	@DisplayName("Deve filtrar empréstimos")
+	void findLoans() throws Exception {
+		
+		Loan loan = loanBuilder().build();
+		given(loanService.find(any(LoanFilterDTO.class), any(Pageable.class)) )
+				  .willReturn(new PageImpl<Loan>(Arrays.asList(loan), PageRequest.of(0, 10), 1));
+		
+		
+		String queryString = String.format("?isbn=%s&costumer=%s&page=0&size=10", loan.getBook().getIsbn(), loan.getCustumer());
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(LOAN_API + queryString)
+		                      										  .accept(MediaType.APPLICATION_JSON);
+		
+		mvc.perform(request)
+		   .andExpect(status().isOk())
+		   .andExpect(jsonPath("content", Matchers.hasSize(1)))
+		   .andExpect(jsonPath("totalElements").value(1))
+		   .andExpect(jsonPath("pageable.pageSize").value(10))
+		   .andExpect(jsonPath("pageable.pageNumber").value(0));
+	}
+	
+	private LoanBuilder loanBuilder() {
+		return Loan.builder().id(1l)
+						     .book(Book.builder().id(1l).isbn("123").build())
+							 .custumer("Renato")
+							 .loanDate(LocalDate.now());
+	}
+	
 	
 }

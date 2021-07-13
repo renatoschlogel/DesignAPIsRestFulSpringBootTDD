@@ -2,8 +2,11 @@ package br.com.renatoschlogel.libraryapi.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.renatoschlogel.libraryapi.api.dto.LoanFilterDTO;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
 import br.com.renatoschlogel.libraryapi.model.repository.LoanRepository;
@@ -38,6 +41,11 @@ public class LoanServiceImpl implements LoanService{
 	@Override
 	public Optional<Loan> findById(Long id) {
 		return loanRepository.findById(id);
+	}
+
+	@Override
+	public Page<Loan> find(LoanFilterDTO loan, Pageable pageable) {
+		return null;
 	}
 
 }
