@@ -19,6 +19,10 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 			     + "    and (l.returned is null or l.returned = false) ")
 	boolean existsByBookAndNotReturned(@Param("book") Book book);
 
-	Page<Loan> findByBookIsbnOrCustumer(String isbn, String custumer, Pageable pageable);
+	@Query(value = " select l from Loan l"
+			     + "   join l.book b "
+			     + "  where l.custumer = :custumer "
+			     + "     or b.isbn = :isbn ")
+	Page<Loan> findByBookIsbnOrCustumer(@Param("isbn") String isbn, @Param("custumer") String custumer, Pageable pageable);
 	
 }

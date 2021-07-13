@@ -140,7 +140,7 @@ public class LoanServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Deve filtrar empréstimos pelas propriedades ")
+	@DisplayName("Deve filtrar empréstimos pelas propriedades")
 	void filterLoansByProperties () throws Exception {
 		
 		Loan loan = loanBuilder().build();
