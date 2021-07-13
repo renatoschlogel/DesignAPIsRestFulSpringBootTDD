@@ -1,5 +1,7 @@
 package br.com.renatoschlogel.libraryapi.model.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +18,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 			     + "  where l.book = :book "
 			     + "    and (l.returned is null or l.returned = false) ")
 	boolean existsByBookAndNotReturned(@Param("book") Book book);
+
+	Page<Loan> findByBookIsbnOrCustumer(String isbn, String custumer, Pageable pageable);
 	
 }
