@@ -1,6 +1,7 @@
 package br.com.renatoschlogel.libraryapi.api.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -129,7 +130,7 @@ public class BookServiceTest {
 	@DisplayName("Deve lancar uma exceção ao tentar atualizar pois o livro não esta persistido")
 	void updateNotPersitBookTest() throws Exception {
 		Book bookNullId = createValidBook();
-		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->bookService.update(bookNullId) );
+		assertThrows(IllegalArgumentException.class, () ->bookService.update(bookNullId) );
 		
 		Mockito.verify(bookRepository, Mockito.never()).save(bookNullId);
 	}
@@ -157,6 +158,7 @@ public class BookServiceTest {
 
 
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	@DisplayName("Deve filtrar livros pelas propriedades ")
 	void filterBooksByProperties () throws Exception {
