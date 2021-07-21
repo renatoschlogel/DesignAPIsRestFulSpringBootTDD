@@ -33,6 +33,7 @@ import br.com.renatoschlogel.libraryapi.api.dto.BookDTO;
 import br.com.renatoschlogel.libraryapi.exception.BusinessException;
 import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.service.BookService;
+import br.com.renatoschlogel.libraryapi.service.LoanService;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -44,6 +45,9 @@ public class BookControllerTest {
 
 	@Autowired
 	MockMvc mvc;
+	
+	@MockBean
+	LoanService loanService;
 	
 	@MockBean
 	BookService bookService; 

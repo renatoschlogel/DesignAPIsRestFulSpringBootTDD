@@ -58,10 +58,10 @@ public class LoanControllerTest {
 	MockMvc mvc;
 	
 	@MockBean
-	private BookService bookService;
+	BookService bookService;
 
 	@MockBean
-	private LoanService loanService;
+	LoanService loanService;
 	
 	@Test
 	@DisplayName("Deve realizar um emprestimo")

@@ -35,11 +35,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookController {
 	
-	private BookService bookService;
-	
-	private LoanService loanService;
-	
-	private ModelMapper modelMapper; 
+	private final LoanService loanService;
+	private final BookService bookService;
+	private final ModelMapper modelMapper; 
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
