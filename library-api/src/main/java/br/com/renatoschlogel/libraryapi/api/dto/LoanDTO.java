@@ -1,5 +1,7 @@
 package br.com.renatoschlogel.libraryapi.api.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,10 +17,16 @@ public class LoanDTO {
 
 	private Long id;
 	
+	@NotEmpty
 	private String isbn;
 	
+	@NotEmpty
 	private String custumer;
 	
+	@NotEmpty
+	private String custumerEmail;
+	
+	@NotEmpty
 	private BookDTO book;
 	
 }

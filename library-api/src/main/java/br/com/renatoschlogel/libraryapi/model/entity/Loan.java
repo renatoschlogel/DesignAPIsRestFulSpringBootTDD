@@ -2,6 +2,7 @@ package br.com.renatoschlogel.libraryapi.model.entity;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,10 @@ public class Loan {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(length = 100)
 	private String custumer;
+
+	private String custumerEmail;
 	
 	@JoinColumn(name = "idBook")
 	@ManyToOne
