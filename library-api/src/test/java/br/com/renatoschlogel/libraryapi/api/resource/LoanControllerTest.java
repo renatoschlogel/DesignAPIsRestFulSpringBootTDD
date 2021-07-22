@@ -66,14 +66,14 @@ public class LoanControllerTest {
 	@Test
 	@DisplayName("Deve realizar um emprestimo")
 	void createLoanTest() throws Exception {
-		LoanDTO loanDto = LoanDTO.builder().isbn("123").custumer("Renato").custumerEmail("renato@hotmail.com").build();
+		LoanDTO loanDto = LoanDTO.builder().isbn("123").customer("Renato").customerEmail("renato@hotmail.com").build();
 		String json = new ObjectMapper().writeValueAsString(loanDto);
 		
 		Book book = Book.builder().id(1L).isbn("123").build();
 		BDDMockito.given(bookService.getBookByIsbn("123")).willReturn(Optional.of(Book.builder().id(1l).isbn("123").build()));
 		
 		
-		Loan loan = Loan.builder().id(1L).custumer("Renato").book(book).loanDate(LocalDate.now()).build();
+		Loan loan = Loan.builder().id(1L).customer("Renato").book(book).loanDate(LocalDate.now()).build();
 		
 		BDDMockito.given(loanService.save(Mockito.any(Loan.class))).willReturn(loan);
 		
@@ -92,7 +92,7 @@ public class LoanControllerTest {
 	void invalidIsbnCreateLoan() throws Exception {
 
 		String isbn = "123";
-		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).custumer("Renato").build();
+		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).customer("Renato").build();
 		String json = new ObjectMapper().writeValueAsString(loanDto);
 		
 		given(bookService.getBookByIsbn(isbn)).willReturn(Optional.empty());
@@ -112,7 +112,7 @@ public class LoanControllerTest {
 	void loanedBookErrorOnCreateLoan() throws Exception {
 
 		String isbn = "123";
-		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).custumer("Renato").build();
+		LoanDTO loanDto = LoanDTO.builder().isbn(isbn).customer("Renato").build();
 		String json = new ObjectMapper().writeValueAsString(loanDto);
 		
 		Book book = Book.builder().id(1L).isbn("123").build();
@@ -169,7 +169,7 @@ public class LoanControllerTest {
 				  .willReturn(new PageImpl<Loan>(Arrays.asList(loan), PageRequest.of(0, 10), 1));
 		
 		
-		String queryString = String.format("?isbn=%s&costumer=%s&page=0&size=10", loan.getBook().getIsbn(), loan.getCustumer());
+		String queryString = String.format("?isbn=%s&costumer=%s&page=0&size=10", loan.getBook().getIsbn(), loan.getCustomer());
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(LOAN_API + queryString)
 		                      										  .accept(MediaType.APPLICATION_JSON);
 		
@@ -184,7 +184,7 @@ public class LoanControllerTest {
 	private LoanBuilder loanBuilder() {
 		return Loan.builder().id(1l)
 						     .book(Book.builder().id(1l).isbn("123").build())
-							 .custumer("Renato")
+							 .customer("Renato")
 							 .loanDate(LocalDate.now());
 	}
 	

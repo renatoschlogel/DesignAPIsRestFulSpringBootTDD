@@ -35,7 +35,7 @@ public class LoanRepositoryTest {
 		
 		Book availableBook = bookBuilder().build();
 		Book borroweBook = bookBuilder().build();
-		Loan loan = Loan.builder().book(borroweBook).custumer("Renato").loanDate(LocalDate.now()).build();
+		Loan loan = Loan.builder().book(borroweBook).customer("Renato").loanDate(LocalDate.now()).build();
 		
 		entityManager.persist(availableBook);
 		entityManager.persist(borroweBook);
@@ -50,16 +50,16 @@ public class LoanRepositoryTest {
 	void findByBookIsbnOrCustumer() throws Exception {
 		
 		Book borroweBook = bookBuilder().isbn("123").build();
-		Loan loan = Loan.builder().book(borroweBook).custumer("Renato").loanDate(LocalDate.now()).build();
+		Loan loan = Loan.builder().book(borroweBook).customer("Renato").loanDate(LocalDate.now()).build();
 		
 		entityManager.persist(borroweBook);
 		entityManager.persist(loan);
 		
-		assertThat(loanRepository.findByBookIsbnOrCustumer("123", "Renato", PageRequest.of(0, 10)).getContent()).hasSize(1);
-		assertThat(loanRepository.findByBookIsbnOrCustumer("123", null, PageRequest.of(0, 10)).getContent()).hasSize(1);
-		assertThat(loanRepository.findByBookIsbnOrCustumer(null, "Renato", PageRequest.of(0, 10)).getContent()).hasSize(1);
-		assertThat(loanRepository.findByBookIsbnOrCustumer(null, null, PageRequest.of(0, 10)).getContent()).hasSize(0);
-		assertThat(loanRepository.findByBookIsbnOrCustumer("naodisponivel", "naodisponivel", PageRequest.of(0, 10)).getContent()).hasSize(0);
+		assertThat(loanRepository.findByBookIsbnOrCustomer("123", "Renato", PageRequest.of(0, 10)).getContent()).hasSize(1);
+		assertThat(loanRepository.findByBookIsbnOrCustomer("123", null, PageRequest.of(0, 10)).getContent()).hasSize(1);
+		assertThat(loanRepository.findByBookIsbnOrCustomer(null, "Renato", PageRequest.of(0, 10)).getContent()).hasSize(1);
+		assertThat(loanRepository.findByBookIsbnOrCustomer(null, null, PageRequest.of(0, 10)).getContent()).hasSize(0);
+		assertThat(loanRepository.findByBookIsbnOrCustomer("naodisponivel", "naodisponivel", PageRequest.of(0, 10)).getContent()).hasSize(0);
 		
 	}
 	

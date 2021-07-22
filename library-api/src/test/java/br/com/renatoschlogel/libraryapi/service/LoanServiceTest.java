@@ -57,13 +57,13 @@ public class LoanServiceTest {
 		Book book = Book.builder().build();
 		String custumer = "Renato";
 		Loan loan = Loan.builder().book(book)
-								  .custumer(custumer)
+								  .customer(custumer)
 								  .loanDate(LocalDate.now())
 								  .build();
 		
 		Loan loanExpected = Loan.builder().id(1l)
 				  .book(book)
-				  .custumer(custumer)
+				  .customer(custumer)
 				  .loanDate(LocalDate.now())
 				  .build();
 		
@@ -83,7 +83,7 @@ public class LoanServiceTest {
 		Book book = Book.builder().build();
 		String custumer = "Renato";
 		Loan loan = Loan.builder().book(book)
-								  .custumer(custumer)
+								  .customer(custumer)
 								  .loanDate(LocalDate.now())
 								  .build();
 		when(loanRepository.existsByBookAndNotReturned(book)).thenReturn(true);
@@ -151,7 +151,7 @@ public class LoanServiceTest {
 		
 		Page<Loan> page = new PageImpl<Loan>(list, pageRequest , 1);
 		
-		when(loanRepository.findByBookIsbnOrCustumer(anyString(), anyString(), any(Pageable.class))).thenReturn(page);
+		when(loanRepository.findByBookIsbnOrCustomer(anyString(), anyString(), any(Pageable.class))).thenReturn(page);
 		
 		Page<Loan> loansPage = loanService.find(loanFilterDTO, pageRequest);
 		
@@ -165,7 +165,7 @@ public class LoanServiceTest {
 	private LoanBuilder loanBuilder() {
 		return Loan.builder().id(1l)
 								  .book(Book.builder().build())
-								  .custumer("Renato")
+								  .customer("Renato")
 								  .loanDate(LocalDate.now());
 	}
 	

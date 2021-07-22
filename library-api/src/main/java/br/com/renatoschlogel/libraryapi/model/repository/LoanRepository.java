@@ -21,9 +21,9 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
 	@Query(value = " select l from Loan l"
 			     + "   join l.book b "
-			     + "  where l.custumer = :custumer "
+			     + "  where l.customer = :customer "
 			     + "     or b.isbn = :isbn ")
-	Page<Loan> findByBookIsbnOrCustumer(@Param("isbn") String isbn, @Param("custumer") String custumer, Pageable pageable);
+	Page<Loan> findByBookIsbnOrCustomer(@Param("isbn") String isbn, @Param("customer") String customer, Pageable pageable);
 
 	Page<Loan> findByBook(Book book, Pageable pageable);
 	

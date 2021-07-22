@@ -21,10 +21,10 @@ public class LoanDTO {
 	private String isbn;
 	
 	@NotEmpty
-	private String custumer;
+	private String customer;
 	
 	@NotEmpty
-	private String custumerEmail;
+	private String customerEmail;
 	
 	@NotEmpty
 	private BookDTO book;
