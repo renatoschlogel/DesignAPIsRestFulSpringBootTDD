@@ -3,6 +3,7 @@ package br.com.renatoschlogel.libraryapi.model.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,38 @@ public class LoanRepositoryTest {
 		assertThat(loanRepository.findByBookIsbnOrCustomer(null, "Renato", PageRequest.of(0, 10)).getContent()).hasSize(1);
 		assertThat(loanRepository.findByBookIsbnOrCustomer(null, null, PageRequest.of(0, 10)).getContent()).hasSize(0);
 		assertThat(loanRepository.findByBookIsbnOrCustomer("naodisponivel", "naodisponivel", PageRequest.of(0, 10)).getContent()).hasSize(0);
+		
+	}
+	
+	@Test
+	@DisplayName("Deve retornar os empréstimos atrasados")
+	void findByLoanDateLessThanAndNotReturned() throws Exception {
+		
+		Book book = bookBuilder().isbn("123").build();
+		Loan loan = Loan.builder().book(book).customer("Renato").loanDate(LocalDate.now().minusDays(5)).build();
+		
+		entityManager.persist(book);
+		entityManager.persist(loan);
+		
+		List<Loan> overdueLoans = loanRepository.findByLoanDateLessThanAndNotReturned(LocalDate.now().minusDays(4));
+		
+		assertThat(overdueLoans).hasSize(1).contains(loan);
+		
+	}
+	
+	@Test
+	@DisplayName("Não deve retornar os empréstimos em dia")
+	void findByLoanDateLessThanAndNotReturnedEmpty() throws Exception {
+		
+		Book book = bookBuilder().isbn("123").build();
+		Loan loan = Loan.builder().book(book).customer("Renato").loanDate(LocalDate.now()).build();
+		
+		entityManager.persist(book);
+		entityManager.persist(loan);
+		
+		List<Loan> overdueLoans = loanRepository.findByLoanDateLessThanAndNotReturned(LocalDate.now());
+		
+		assertThat(overdueLoans).isEmpty();
 		
 	}
 	
