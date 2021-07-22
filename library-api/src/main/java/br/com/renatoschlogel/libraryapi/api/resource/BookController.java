@@ -29,10 +29,12 @@ import br.com.renatoschlogel.libraryapi.model.entity.Loan;
 import br.com.renatoschlogel.libraryapi.service.BookService;
 import br.com.renatoschlogel.libraryapi.service.LoanService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Slf4j
 public class BookController {
 	
 	private final LoanService loanService;
@@ -42,6 +44,9 @@ public class BookController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public BookDTO create(@RequestBody @Valid BookDTO bookDTO) {
+		
+		log.info("Criando um livro para o isbn {0}", bookDTO.getIsbn());
+		
 		Book book = modelMapper.map(bookDTO, Book.class);
 		book = bookService.incluir(book);
 		return modelMapper.map(book, BookDTO.class);
@@ -49,6 +54,9 @@ public class BookController {
 
 	@GetMapping("{id}")
 	public BookDTO get(@PathVariable Long id) {
+		
+		log.info("Consultandoo Livro com id {0}", id);
+		
 		return  bookService.getById(id)
 				            .map(book -> modelMapper.map(book, BookDTO.class))
 				            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -57,6 +65,9 @@ public class BookController {
 	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
+		
+		log.info("deletando Livro com id {0}", id);
+		
 		Optional<Book> optBook = bookService.getById(id);
 		if(!optBook.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
