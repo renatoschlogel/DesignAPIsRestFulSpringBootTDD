@@ -28,6 +28,10 @@ import br.com.renatoschlogel.libraryapi.model.entity.Book;
 import br.com.renatoschlogel.libraryapi.model.entity.Loan;
 import br.com.renatoschlogel.libraryapi.service.BookService;
 import br.com.renatoschlogel.libraryapi.service.LoanService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
 @Slf4j
+@Api("Book API")
 public class BookController {
 	
 	private final LoanService loanService;
@@ -42,6 +47,7 @@ public class BookController {
 	private final ModelMapper modelMapper; 
 	
 	@PostMapping
+	@ApiOperation("Cria um novo livro")
 	@ResponseStatus(HttpStatus.CREATED)
 	public BookDTO create(@RequestBody @Valid BookDTO bookDTO) {
 		
@@ -64,6 +70,9 @@ public class BookController {
 	
 	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ApiResponses({
+		@ApiResponse(code = 204, message = "Book successfully deleted")
+	})
 	public void delete(@PathVariable Long id) {
 		
 		log.info("deletando Livro com id {0}", id);
