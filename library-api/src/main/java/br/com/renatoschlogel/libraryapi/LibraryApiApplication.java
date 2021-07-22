@@ -17,23 +17,10 @@ import br.com.renatoschlogel.libraryapi.service.EmailService;
 @EnableScheduling
 public class LibraryApiApplication {
 	
-	@Autowired
-	private EmailService emailService;
-	
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-	
-	@Bean
-	public CommandLineRunner runner() {
-		return args -> {
-			List<String> emails = Arrays.asList("library-api-866fa3@inbox.mailtrap.io");
-			emailService.sendMails("Teste de serviço de email", emails);
-			System.out.println("email enviados");
-		};
-	}
-	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApiApplication.class, args);
