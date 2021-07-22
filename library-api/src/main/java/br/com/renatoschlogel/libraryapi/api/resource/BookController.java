@@ -51,7 +51,7 @@ public class BookController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public BookDTO create(@RequestBody @Valid BookDTO bookDTO) {
 		
-		log.info("Criando um livro para o isbn {0}", bookDTO.getIsbn());
+		log.info("Criando um livro para o isbn {}", bookDTO.getIsbn());
 		
 		Book book = modelMapper.map(bookDTO, Book.class);
 		book = bookService.incluir(book);
@@ -61,7 +61,7 @@ public class BookController {
 	@GetMapping("{id}")
 	public BookDTO get(@PathVariable Long id) {
 		
-		log.info("Consultandoo Livro com id {0}", id);
+		log.info("Consultandoo Livro com id {}", id);
 		
 		return  bookService.getById(id)
 				            .map(book -> modelMapper.map(book, BookDTO.class))
